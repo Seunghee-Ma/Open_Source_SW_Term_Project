@@ -4,3 +4,8 @@ When accessing CCTV footage, it is essential to adhere to the Personal Informati
 
 ## Purpose
 This project was initiated in response to the need for privacy protection while accessing CCTV footage. The goal is to utilize the concepts learned in class, particularly leveraging OpenCV, to apply mosaic to individuals in images or videos.
+
+##Usage
+```git clone https://github.com/Seunghee-Ma/Open_Source_SW_Term_Project.git
+cd Open_Source_SW_Term_Project
+```
