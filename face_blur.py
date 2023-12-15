@@ -26,17 +26,48 @@ def apply_face_mosaic(image):
 def process_video(video_path):
     cap = cv2.VideoCapture(video_path)
 
+    # 얼굴 트래킹을 위한 초기화
+    tracker = cv2.TrackerKCF_create()
+
+    # 첫 번째 프레임 읽기
+    ret, frame = cap.read()
+
+    # 얼굴 감지기 초기화
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+    # 첫 번째 프레임에서 얼굴 감지
+    faces = face_cascade.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), scaleFactor=1.3, minNeighbors=5, minSize=(30, 30))
+
+    if len(faces) > 0:
+        # 첫 번째 얼굴에 대해 트래커 초기화
+        tracker.init(frame, tuple(faces[0]))
+
     while cap.isOpened():
         ret, frame = cap.read()
 
         if not ret:
             break
 
+        # 트래커 업데이트
+        success, box = tracker.update(frame)
+
+        if success:
+            # 얼굴 위치 업데이트
+            x, y, w, h = [int(i) for i in box]
+            faces = [(x, y, w, h)]
+        else:
+            # 새로운 얼굴 감지
+            faces = face_cascade.detectMultiScale(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY), scaleFactor=1.3, minNeighbors=5, minSize=(30, 30))
+
+            if len(faces) > 0:
+                # 새로운 얼굴에 대해 트래커 초기화
+                tracker.init(frame, tuple(faces[0]))
+
         # 모자이크 처리 함수 호출
-        processed_frame = apply_face_mosaic(frame)
+        processed_frame = apply_face_mosaic(frame, faces)
 
         # 화면에 출력
-        cv2.imshow('Face Mosaic', processed_frame)
+        cv2.imshow('Face Tracking and Mosaic', processed_frame)
 
         # 'q' 키를 누르면 종료
         if cv2.waitKey(1) & 0xFF == ord('q'):
