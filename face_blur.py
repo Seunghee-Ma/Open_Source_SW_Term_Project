@@ -22,3 +22,15 @@ def apply_face_mosaic(image):
         image[y:y+face_roi.shape[0], x:x+face_roi.shape[1]] = face_roi
 
     return image
+
+if __name__ == "__main__":
+    # 사용자로부터 동영상 또는 이미지 경로 입력 받기
+    file_path = input("Enter the path of video or image: ")
+
+    # 파일이 동영상인지 이미지인지 확인 후 처리
+    if file_path.lower().endswith(('.mp4', '.avi', '.mov')):
+        process_video(file_path)
+    elif file_path.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp')):
+        process_image(file_path)
+    else:
+        print("Unsupported file format. Please provide a video or image file.")
