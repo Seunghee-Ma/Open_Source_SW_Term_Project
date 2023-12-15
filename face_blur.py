@@ -23,6 +23,40 @@ def apply_face_mosaic(image):
 
     return image
 
+def process_video(video_path):
+    cap = cv2.VideoCapture(video_path)
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+
+        if not ret:
+            break
+
+        # 모자이크 처리 함수 호출
+        processed_frame = apply_face_mosaic(frame)
+
+        # 화면에 출력
+        cv2.imshow('Face Mosaic', processed_frame)
+
+        # 'q' 키를 누르면 종료
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+def process_image(image_path):
+    # 이미지 불러오기
+    image = cv2.imread(image_path)
+
+    # 모자이크 처리 함수 호출
+    processed_image = apply_face_mosaic(image)
+
+    # 결과 이미지를 저장하거나 화면에 출력
+    cv2.imshow('Face Mosaic', processed_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 if __name__ == "__main__":
     # 사용자로부터 동영상 또는 이미지 경로 입력 받기
     file_path = input("Enter the path of video or image: ")
